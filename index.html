@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Motor de Novelas Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+            padding: 20px;
+        }
+        input, button, textarea {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+        button {
+            background: #1e90ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0b6cd4;
+        }
+        .log {
+            background: #000;
+            padding: 10px;
+            margin-top: 15px;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📚 Motor de Novelas Web</h1>
+
+<label>Nombre de la novela</label>
+<input id="nombre" placeholder="Hardcore Supervivencia Isla">
+
+<label>URL patrón del capítulo</label>
+<input id="url" placeholder="https://www.quanben.io/n/.../{}.html">
+
+<label>Capítulo inicial</label>
+<input id="inicio" type="number" value="1">
+
+<label>Cantidad de capítulos</label>
+<input id="cantidad" type="number" value="5">
+
+<button onclick="ejecutar()">🚀 Ejecutar</button>
+
+<div class="log" id="log"></div>
+
+<script>
+const API_URL = "https://novelas-api.onrender.com";
+
+function log(msg) {
+    const div = document.getElementById("log");
+    div.textContent += msg + "\n";
+    div.scrollTop = div.scrollHeight;
+}
+
+async function ejecutar() {
+    log("📡 Enviando solicitud al backend...");
+
+    const payload = {
+        nombre: document.getElementById("nombre").value,
+        url_patron: document.getElementById("url").value,
+        capitulo_inicio: parseInt(document.getElementById("inicio").value),
+        cantidad_capitulos: parseInt(document.getElementById("cantidad").value)
+    };
+
+    try {
+        const res = await fetch(API_URL + "/ejecutar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        log("✅ Respuesta:");
+        log(JSON.stringify(data, null, 2));
+    } catch (e) {
+        log("❌ Error al conectar con el backend");
+        log(e.toString());
+    }
+}
+</script>
+
+</body>
+</html>
+
