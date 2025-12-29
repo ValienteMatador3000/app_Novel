@@ -73,15 +73,14 @@ function log(msg) {
 
 async function ejecutar() {
     log("📡 Enviando solicitud al backend...");
-
-    const nombre = document.getElementById("nombre").value;
+    log("⏳ Esto puede tardar varios minutos, por favor espera...");
 
     const payload = {
-        nombre: nombre,
-        url_inicial: document.getElementById("url").value,
-        url_libro: document.getElementById("url").value,
-        dominio: "https://www.quanben.io",
-        capitulos: parseInt(document.getElementById("cantidad").value)
+        nombre: document.getElementById("nombre").value,
+        url_inicial: document.getElementById("url_inicial").value,
+        url_libro: document.getElementById("url_libro").value,
+        dominio: document.getElementById("dominio").value,
+        capitulos: parseInt(document.getElementById("capitulos").value)
     };
 
     try {
@@ -92,14 +91,17 @@ async function ejecutar() {
         });
 
         const data = await res.json();
+
         log("✅ Respuesta del backend:");
         log(JSON.stringify(data, null, 2));
 
         if (data.resultado && data.resultado.archivo) {
             const enlace = document.createElement("a");
-            enlace.href = `${API_URL}/descargar/${nombre}/${data.resultado.archivo}`;
-            enlace.textContent = "⬇ Descargar archivo";
+            enlace.href = `${API_URL}/descargar/${payload.nombre}/${data.resultado.archivo}`;
+            enlace.textContent = "⬇ Descargar archivo generado";
             enlace.target = "_blank";
+            enlace.style.display = "block";
+            enlace.style.marginTop = "10px";
 
             document.body.appendChild(enlace);
             log("📥 Enlace de descarga generado");
@@ -111,7 +113,6 @@ async function ejecutar() {
     }
 }
 </script>
-
 
 </body>
 </html>
